@@ -1,24 +1,26 @@
 package src;
 
+import java.text.DecimalFormat;
+
 public class SavingsAccount {
-	
+	// kommentar här ska tas bort
 	private double saldo;
 	private int accountNumber;
 	
 	private final float rate = 0.01f;
-	private final String accountType = "Saving account"; 
+	private final String accountType = "Sparkonto"; 
 	
 	public SavingsAccount(int accountNumber){
 		this.accountNumber = accountNumber;
 	}
 	
 	// sätt in pengar
-	public void deposit(int amount){
-		this.saldo = amount;
+	public void deposit(double amount){
+		this.saldo += amount;
 	}
 	
 	// ta ut pengar
-	public void withdraw (int amount){
+	public void withdraw (double amount){
 		System.out.println("How many money do you want to take out?");
 		saldo -=amount;
 		System.out.println("You take out " + saldo + " kr from your account.");
@@ -32,8 +34,12 @@ public class SavingsAccount {
 	
 	// show deposit interest
 	public double getInterest(){
-		double interest;
-		return interest = saldo * (1 + rate);
+		return (rate * 100);
+	}
+	
+	public double clalculateInterest() {
+		double amountWithInterest = saldo * (1 + rate);
+		return amountWithInterest; 
 	}
 	
 	public String getAccountType(){
@@ -46,10 +52,14 @@ public class SavingsAccount {
 	
 	// hämta presentationsinformation om kontot
 	// kontonummer saldo kontotyp räntesats
-	public void accountInfo(){
-		System.out.println( "Account number is " + accountNumber +
-				            "Saldo is: " + saldo +
-				            "Account type is: " + accountType +
-				            "Rate is: " + rate);
+	public String accountInfo(){
+		DecimalFormat format = new DecimalFormat("#0.0");
+		String info = accountNumber + " " + saldo + " " + accountType + " " + rate*100 + " " + format.format(saldo * rate);
+		return info;		   
+	}
+	
+	public int removeAccount(int accountNumber){
+		accountNumber = 0;
+		return accountNumber;
 	}
 }
