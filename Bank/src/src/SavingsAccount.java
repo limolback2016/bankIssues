@@ -1,7 +1,7 @@
 package src;
 
 public class SavingsAccount {
-	
+	// kommentar här ska tas bort
 	private double saldo;
 	private int accountNumber;
 	
@@ -13,12 +13,12 @@ public class SavingsAccount {
 	}
 	
 	// sätt in pengar
-	public void deposit(int amount){
+	public void deposit(double amount){
 		this.saldo = amount;
 	}
 	
 	// ta ut pengar
-	public void withdraw (int amount){
+	public void withdraw (double amount){
 		System.out.println("How many money do you want to take out?");
 		saldo -=amount;
 		System.out.println("You take out " + saldo + " kr from your account.");
@@ -46,10 +46,16 @@ public class SavingsAccount {
 	
 	// hämta presentationsinformation om kontot
 	// kontonummer saldo kontotyp räntesats
-	public void accountInfo(){
-		System.out.println( "Account number is " + accountNumber +
-				            "Saldo is: " + saldo +
-				            "Account type is: " + accountType +
-				            "Rate is: " + rate);
+	public String accountInfo(){
+		String info = "Account number is " + accountNumber +
+				               "Saldo is: " + saldo +
+				        "Account type is: " + accountType +
+				                "Rate is: " + rate;
+		return info;		   
+	}
+	
+	public int removeAccount(int accountNumber){
+		accountNumber = 0;
+		return accountNumber;
 	}
 }
