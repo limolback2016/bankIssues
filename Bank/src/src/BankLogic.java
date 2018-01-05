@@ -1,3 +1,9 @@
+/***
+ * This class contents logic of how to handle 
+ * all customers and their accounts and basic 
+ * bank functionality
+ * @author Li Molback, limolb-5
+ */
 package src;
 
 import java.awt.FocusTraversalPolicy;
@@ -11,12 +17,17 @@ public class BankLogic {
 	
 	private int accoutNummber = 1001;
 	List<Customer> customerList = new ArrayList<Customer>();
-	List<SavingsAccount> accountList = new ArrayList<SavingsAccount>();
 	
-	public BankLogic(){
-	
-	}
-	
+	/**
+	 * Create a new customer in the bank system
+	 * with all customer information
+	 * @param name is customer's first name
+	 * @param surname is customer's surname
+	 * @param pNo is customer's person no
+	 * @return a new customer is created and 
+	 * also check if the customer already 
+	 * exists or not in the system
+	 */
 	public boolean createCustomer(String name, String surname, String pNo){
 		if ( findCustomer(pNo) == -1){
 			Customer customer = new Customer(pNo);
@@ -28,6 +39,12 @@ public class BankLogic {
 		return false;
 	}
 	
+	/**
+	 * Get all customer information
+	 * @param pNo identify which customer
+	 * @return customer list or null when 
+	 * customer doesn't exist
+	 */
 	public List<String> getCustomer(String pNo){
 		List<String> myList = new ArrayList<>();
 		if ( !(findCustomer(pNo) == -1)){
@@ -42,6 +59,13 @@ public class BankLogic {
 		return null;
 	}
 	
+	/**
+	 * change exist customer information
+	 * @param name is customer's first name
+	 * @param surname is customer's surname
+	 * @param pNo is customer's person no
+	 * @return customer's info changed or not
+	 */
 	public boolean changeCustomerName(String name, String surname, String pNo){
 		if ( findCustomer(pNo) == -1){
 			return false;
@@ -53,17 +77,32 @@ public class BankLogic {
 		}
 	}
 	
+	/**
+	 * delete customer's information from the system
+	 * @param pNo is customer person no
+	 * @return remove list of customer
+	 */
 	public List<String> deleteCustomer(String pNo){
-		List<String> removeList = getCustomer(pNo);
+		List<String> removeList = new ArrayList<>();
 		if ( findCustomer(pNo) == -1){
 			return null;
 		} else {
 			Customer c = customerList.get(findCustomer(pNo));
+			removeList.add(c.getCustomerInfo());
+			for(SavingsAccount s : c.getAccounts()) {
+				removeList.add(s.accountInfo() + " " + (s.getInterest() / 100 * s.getAccountSaldo()));
+			}
 			customerList.remove(c);
 		}
 		return removeList;
 	}
 	
+	/**
+	 * create saving account to a customer
+	 * @param pNo is customer's person no
+	 * @return account no and check if account no 
+	 * exists or not
+	 */
 	public int createSavingsAccount(String pNo){
 		if ( !(findCustomer(pNo) == -1) ){
 			Customer c = customerList.get(findCustomer(pNo)); // check if customer exits 
@@ -76,10 +115,17 @@ public class BankLogic {
 		}
 	}
 	
+	/**
+	 * Get acoount information
+	 * @param pNo is customer's person no
+	 * @param accountId is account no
+	 * @return account information or null when 
+	 * account doesn't exist
+	 */
 	public String getAccount(String pNo, int accountId){
 		Customer c = customerList.get(findCustomer(pNo));
 		if (!c.equals(null)){
-			for(SavingsAccount s : accountList){
+			for(SavingsAccount s : c.getAccounts()){
 				if ( s.getAccountNumber() == accountId ){
 					return s.accountInfo();
 				}
@@ -88,6 +134,14 @@ public class BankLogic {
 		return null;
 	}
 	
+	/**
+	 * deposit money to a customer's account
+	 * @param pNo is customer's person no
+	 * @param accountId is account no
+	 * @param amount is amount of money
+	 * @return if account exist deposit money
+	 * in the account
+	 */
 	public boolean deposit(String pNo, int accountId, double amount) {
 		Customer c = customerList.get(findCustomer(pNo));
 		//if ( c.getIdNo().equals(pNo)) {
@@ -102,6 +156,14 @@ public class BankLogic {
 		return false;
 	}
 	
+	/**
+	 * withdraw money from an account
+	 * @param pNo is customer's person no
+	 * @param accountId is account no
+	 * @param amount is amount of withdrawing money
+	 * @return withdraw money from an account when 
+	 * there has enough money in it
+	 */
 	public boolean withdraw(String pNo, int accountId, double amount) {
 		Customer c = customerList.get(findCustomer(pNo));
 		int account = c.findAccount(accountId);
@@ -117,6 +179,12 @@ public class BankLogic {
 		return false;
 	}
 	
+	/**
+	 * close an account of a customer
+	 * @param pNr is customer's person no
+	 * @param accountId is account no
+	 * @return account information 
+	 */
 	public String closeAccount(String pNr, int accountId) {
 		int listId = findCustomer(pNr);
 		if(listId != -1) {
@@ -125,16 +193,19 @@ public class BankLogic {
 			if(!(account==-1)) {
 				SavingsAccount s = c.getAccount(account);
 				if ( !s.equals(null)) {
-					for ( SavingsAccount sa : accountList){
-						sa.removeAccount(accountId);
-					}
-					return s.accountInfo();
+					double interest = (s.getInterest()/100 * s.getAccountSaldo());
+					c.closeAccount(accountId);
+					return s.accountInfo() + " " + interest;
 				}
 			}
 		}
 		return null;
 	}
 	
+	/**
+	 * get all customer list
+	 * @return customer list
+	 */
 	public ArrayList<String> getAllCustomers() {
 		ArrayList<String> myList = new ArrayList<String>();
 		for ( Customer c : customerList) {
@@ -143,7 +214,11 @@ public class BankLogic {
 		return myList;
 	}
 	
-	// help class to check if customer already exists or not
+	/**
+	 * check if customer already exists or not
+	 * @param pNo is customer's person no
+	 * @return customer exists or not  
+	 */
 		private int findCustomer(String pNo){
 			for ( int i = 0; i< customerList.size(); i++){
 				if ( customerList.get(i).getIdNo().equals(pNo) ){
