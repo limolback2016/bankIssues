@@ -5,8 +5,6 @@
  */
 package src;
 
-import java.text.DecimalFormat;
-
 public class SavingsAccount extends Account{
 	
 	private final float WITHDRAWAL_RATE = 0.02f;
@@ -32,7 +30,6 @@ public class SavingsAccount extends Account{
 	 */
 	@Override
 	public boolean withdraw(double amountOfWithdrawMoney) {
-		DecimalFormat d = new DecimalFormat("#.##");
 		boolean returnVal = false;
 		double amount = (amountOfWithdrawMoney * (1 + WITHDRAWAL_RATE));
 		if((getAccountBalance() - amount) >= 0) {
@@ -53,8 +50,9 @@ public class SavingsAccount extends Account{
 	/**
 	 * calculate interest of balance in an account
 	 * @return interest of balance
+
 	 */
-	public double clalculateInterest() {
+	public double calculateInterest() {
 		double amountWithInterest = getAccountBalance() * rate;
 		return amountWithInterest; 
 	}
