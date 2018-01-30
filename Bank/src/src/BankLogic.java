@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BankLogic {
-	
 	private static int accoutNummber = 1001;
 	List<Customer> customerList = new ArrayList<Customer>();
 	DecimalFormat d = new DecimalFormat("#.0");

@@ -53,6 +53,7 @@ public class SavingsAccount extends Account{
 	/**
 	 * calculate interest of balance in an account
 	 * @return interest of balance
+
 	 */
 	public double clalculateInterest() {
 		double amountWithInterest = getAccountBalance() * rate;
