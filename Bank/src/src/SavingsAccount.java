@@ -1,101 +1,61 @@
 /***
  * This class contents all informaiton of
- * an account for a customer 
+ * a saving account for a customer 
  * @author Li Molback, limolb-5
  */
 package src;
 
 import java.text.DecimalFormat;
 
-public class SavingsAccount {
-	// kommentar här ska tas bort
-	private double saldo;
-	private int accountNumber;
+public class SavingsAccount extends Account{
 	
-	private final float rate = 0.01f;
-	private final String accountType = "Sparkonto"; 
+	private final float WITHDRAWAL_RATE = 0.02f;
+	private boolean costWithdraw = false; 
 	
 	/**
-	 * constructor for class SavingsAccount
-	 * @param accountNumber passes account information
-	 * dvs data to class instance variable accountNumber
-	 * and save the information
+	 * class constructor
+	 * @param accountNo is account number
 	 */
-	public SavingsAccount(int accountNumber){
-		this.accountNumber = accountNumber;
+	public SavingsAccount(int accountNo) {
+		super(accountNo); //super hänvisar konstruktor i Account
+		rate = 0.01f;
+		accountType = "Sparkonto";
 	}
-	
+
 	/**
-	 * shows how many money is in the account
-	 * @param amount is the money which 
-	 * customer sets into its account
+	 * override withdraw method from base class Account
+	 * withdraw money in a saving account
+	 * @param amountOfWithdrawMoney is withdraw money 
+	 *        in a saving account
+	 * @return if there is enough money from a credit account 
+	 *         then rate will be 1% of withdraw money
 	 */
-	public void deposit(double amount){
-		this.saldo += amount;
-	}
+	@Override
+	public boolean withdraw(double amountOfWithdrawMoney) {
+		DecimalFormat d = new DecimalFormat("#.##");
+		boolean returnVal = false;
+		double amount = (amountOfWithdrawMoney * (1 + WITHDRAWAL_RATE));
+		if((getAccountBalance() - amount) >= 0) {
+			if(costWithdraw) {
+				this.balance -= amount;
+				updateTransactionList(amount);
+			} else {
+				this.balance -= amountOfWithdrawMoney;
+				costWithdraw = true;
+				updateTransactionList(amountOfWithdrawMoney);
+			}
+			returnVal = true;
+			
+			}
+		return returnVal;
+		}
 	
 	/**
-	 * take out pengar from an account
-	 * @param amount is the money which 
-	 * customer takes out from its account
-	 */
-	public void withdraw (double amount){
-		System.out.println("How many money do you want to take out?");
-		saldo -=amount;
-		System.out.println("You take out " + saldo + " kr from your account.");
-	}
-	
-	/**
-	 * show balance of an account
-	 * @return what is left of an account
-	 */
-	public double getAccountSaldo(){
-		System.out.println("You have " +  saldo + " in your account.");
-		return saldo;
-	}
-	
-	/**
-	 * Get interest of deposit in an account
-	 * @return interest of the deposit 
-	 */
-	public double getInterest(){
-		return (rate * 100);
-	}
-	
-	/**
-	 * calculate interest of deposit in an account
-	 * @return
+	 * calculate interest of balance in an account
+	 * @return interest of balance
 	 */
 	public double clalculateInterest() {
-		double amountWithInterest = saldo * (1 + rate);
+		double amountWithInterest = getAccountBalance() * rate;
 		return amountWithInterest; 
-	}
-	
-	/**
-	 * Get the type of an account 
-	 * @return account type
-	 */
-	public String getAccountType(){
-		return this.accountType;
-	}
-	
-	/**
-	 * Get account number of a customer
-	 * @return customer account number
-	 */
-	public int getAccountNumber(){
-		return accountNumber;
-	}
-	
-	/**
-	 * get presentation information about the 
-	 * account no, balance, account type and 
-	 * interest rate
-	 * @return
-	 */
-	public String accountInfo(){
-		DecimalFormat format = new DecimalFormat("#0.0");
-		String info = accountNumber + " " + saldo + " " + accountType + " " + rate*100;
-		return info;		   
 	}
 }

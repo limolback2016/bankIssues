@@ -5,17 +5,19 @@
  */
 package src;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Customer {
 	private String surName;
 	private String name;
 	private String idNo;
-	List<SavingsAccount> accounts = new ArrayList<>();
+	List<Account> accountList = new ArrayList<Account>();
 	
+	/**
+	 * class constructor
+	 * @param pID is person number
+	 */
 	public Customer(String pID){
 		this.idNo = pID;
 	}
@@ -64,16 +66,16 @@ public class Customer {
 	 * create an new account for the customer 
 	 * @param s add an account to the customer
 	 */
-	public void addAccount(SavingsAccount s){
-		accounts.add(s);
+	public void addAccount(Account s){
+		accountList.add(s);
 	}
 	
 	/**
 	 * Get all accounts of a customer
 	 * @return a list of the customer's accounts 
 	 */
-	public List<SavingsAccount> getAccounts(){
-		return accounts;
+	public List<Account> getAccounts(){
+		return accountList;
 	}
 	
 	/**
@@ -82,8 +84,8 @@ public class Customer {
 	 * @param id the customer ID with connecting to the account
 	 * @return accounts which connected with a customer ID
 	 */
-	public SavingsAccount getAccount(int id){
-		return accounts.get(id);
+	public Account getAccount(int id){
+		return accountList.get(id);
 	}
 	
 	/**
@@ -100,8 +102,8 @@ public class Customer {
 	 * @return check against account list
 	 */
 	public int findAccount(int accountNumber){
-		for (int i = 0 ; i < accounts.size() ; i++){
-			if ( accounts.get(i).getAccountNumber() == accountNumber){
+		for (int i = 0 ; i < accountList.size() ; i++){
+			if (accountList.get(i).getAccountNo() == accountNumber){
 				return i;
 			}
 		}
@@ -113,7 +115,7 @@ public class Customer {
 	 * @param accountNumber which is checked
 	 */
 	public void closeAccount(int accountNumber) {
-		accounts.remove(findAccount(accountNumber));
+		accountList.remove(findAccount(accountNumber));
 	}
 	
 }

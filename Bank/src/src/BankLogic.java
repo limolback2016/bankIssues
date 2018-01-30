@@ -6,17 +6,15 @@
  */
 package src;
 
-import java.awt.FocusTraversalPolicy;
-import java.lang.annotation.Native;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.lang.model.type.NullType;
-
 public class BankLogic {
 	
-	private int accoutNummber = 1001;
+	private static int accoutNummber = 1001;
 	List<Customer> customerList = new ArrayList<Customer>();
+	DecimalFormat d = new DecimalFormat("#.0");
 	
 	/**
 	 * Create a new customer in the bank system
@@ -50,9 +48,9 @@ public class BankLogic {
 		if ( !(findCustomer(pNo) == -1)){
 			Customer customer = customerList.get(findCustomer(pNo));
 			myList.add(customer.getCustomerInfo());
-			for (SavingsAccount a : customer.getAccounts()){
-				myList.add(a.getAccountNumber() + " " + a.getAccountSaldo() + " " + a.getAccountType() + 
-						" " + a.getInterest());
+			for (Account a : customer.getAccounts()){
+				myList.add(a.getAccountNo() + " " + d.format(a.getAccountBalance()) + " " + a.getAccountType() + 
+						" " + d.format(a.getInterest() * 100));
 			}
 			return myList;
 		}
@@ -89,8 +87,8 @@ public class BankLogic {
 		} else {
 			Customer c = customerList.get(findCustomer(pNo));
 			removeList.add(c.getCustomerInfo());
-			for(SavingsAccount s : c.getAccounts()) {
-				removeList.add(s.accountInfo() + " " + (s.getInterest() / 100 * s.getAccountSaldo()));
+			for(Account s : c.getAccounts()) {
+				removeList.add(s.accountInfo() + " " + d.format(s.getInterest() * s.getAccountBalance()));
 			}
 			customerList.remove(c);
 		}
@@ -106,12 +104,30 @@ public class BankLogic {
 	public int createSavingsAccount(String pNo){
 		if ( !(findCustomer(pNo) == -1) ){
 			Customer c = customerList.get(findCustomer(pNo)); // check if customer exits 
-			SavingsAccount sa = new SavingsAccount(accoutNummber); // create object of savingsaccount
-			c.addAccount(sa); // skapa an accout for the customer
-			accoutNummber++;  // account number increase
-			return sa.getAccountNumber();  // return account number increase
+			Account savningsAccount = new SavingsAccount(accoutNummber); // create object of savingsaccount
+			c.addAccount(savningsAccount); // skapa an accout for the customer
+			accoutNummber++;  // account number increase 
+			return savningsAccount.getAccountNo();  // return account number increase
 		} else {
 			return -1;  // felaktig code
+		}
+	}
+	
+	/**
+	 * create credit account to a customer
+	 * @param pNr is customer's person no
+	 * @return account no and check if account no 
+	 * exists or not
+	 */
+	public int createCreditAccount(String pNr) {
+		if ( !(findCustomer(pNr) == -1) ){
+			Customer c = customerList.get(findCustomer(pNr));
+			Account creditAccount = new CreditAccount(accoutNummber);
+			c.addAccount(creditAccount);
+			accoutNummber++;
+			return creditAccount.getAccountNo();
+		} else {
+			return -1;
 		}
 	}
 	
@@ -125,8 +141,8 @@ public class BankLogic {
 	public String getAccount(String pNo, int accountId){
 		Customer c = customerList.get(findCustomer(pNo));
 		if (!c.equals(null)){
-			for(SavingsAccount s : c.getAccounts()){
-				if ( s.getAccountNumber() == accountId ){
+			for(Account s : c.getAccounts()){
+				if ( s.getAccountNo() == accountId ){
 					return s.accountInfo();
 				}
 			}
@@ -144,12 +160,11 @@ public class BankLogic {
 	 */
 	public boolean deposit(String pNo, int accountId, double amount) {
 		Customer c = customerList.get(findCustomer(pNo));
-		//if ( c.getIdNo().equals(pNo)) {
 		int account = c.findAccount(accountId);
 		if(!(account==-1)) {
-			SavingsAccount s = c.getAccount(account);
-			if ( !s.equals(null)) {
-					s.deposit(amount);
+			Account savingsAccount = c.getAccount(account);
+			if ( !savingsAccount.equals(null)) {
+					savingsAccount.deposit(amount);
 				return true;
 			}
 		}
@@ -168,13 +183,8 @@ public class BankLogic {
 		Customer c = customerList.get(findCustomer(pNo));
 		int account = c.findAccount(accountId);
 		if(!(account==-1)) {
-			SavingsAccount s = c.getAccount(account);
-			if ( !s.equals(null)) {
-				if ( s.getAccountSaldo() >= amount) {
-					s.withdraw(amount);
-					return true;
-				}
-			}
+			Account tempAccount = c.getAccount(account);
+			tempAccount.withdraw(amount);
 		}
 		return false;
 	}
@@ -187,15 +197,16 @@ public class BankLogic {
 	 */
 	public String closeAccount(String pNr, int accountId) {
 		int listId = findCustomer(pNr);
+		DecimalFormat dec = new DecimalFormat("#.00");
 		if(listId != -1) {
 			Customer c = customerList.get(listId);
 			int account = c.findAccount(accountId);
 			if(!(account==-1)) {
-				SavingsAccount s = c.getAccount(account);
-				if ( !s.equals(null)) {
-					double interest = (s.getInterest()/100 * s.getAccountSaldo());
+				Account savingsAccount = c.getAccount(account);
+				if ( !savingsAccount.equals(null)) {
+					double interest = (savingsAccount.getInterest() * savingsAccount.getAccountBalance());
 					c.closeAccount(accountId);
-					return s.accountInfo() + " " + interest;
+					return savingsAccount.accountInfo() + " " + dec.format(interest);
 				}
 			}
 		}
@@ -203,7 +214,7 @@ public class BankLogic {
 	}
 	
 	/**
-	 * get all customer list
+	 * get all customers
 	 * @return customer list
 	 */
 	public ArrayList<String> getAllCustomers() {
@@ -212,6 +223,25 @@ public class BankLogic {
 			myList.add(c.getCustomerInfo());
 		}
 		return myList;
+	}
+	
+	/**
+	 * get transaction with right person number and right account no
+	 * @param pNr is person number
+	 * @param accountId is account number
+	 * @return transaction of a customer account
+	 */
+	public ArrayList<String> getTransactions(String pNr, int accountId){
+		int listId = findCustomer(pNr);
+		if (listId != -1){
+			Customer c = customerList.get(listId);
+			int accountListId = c.findAccount(accountId);
+			if( !(accountListId == -1)) {
+				Account myAccount = c.getAccount(accountListId);
+				return myAccount.getTransactionList();
+			}
+		}
+		return null;	
 	}
 	
 	/**
