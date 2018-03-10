@@ -3,11 +3,12 @@
  * a saving account for a customer 
  * @author Li Molback, limolb-5
  */
-package src;
+package limolb5;
 
 public class SavingsAccount extends Account{
 	
-	private final float WITHDRAWAL_RATE = 0.02f;
+	private final float SAVING_RATE = 1f;
+	private final float WITHDRAWAL_RATE = 2f;
 	private boolean costWithdraw = false; 
 	
 	/**
@@ -16,7 +17,7 @@ public class SavingsAccount extends Account{
 	 */
 	public SavingsAccount(int accountNo) {
 		super(accountNo); //super hänvisar konstruktor i Account
-		rate = 0.01f;
+		rate = SAVING_RATE;
 		accountType = "Sparkonto";
 	}
 
@@ -25,24 +26,24 @@ public class SavingsAccount extends Account{
 	 * withdraw money in a saving account
 	 * @param amountOfWithdrawMoney is withdraw money 
 	 *        in a saving account
-	 * @return if there is enough money from a credit account 
-	 *         then rate will be 1% of withdraw money
+	 * @return if there is enough money from a saving account 
+	 *         then rate will be 2% of withdraw money
 	 */
 	@Override
 	public boolean withdraw(double amountOfWithdrawMoney) {
 		boolean returnVal = false;
-		double amount = (amountOfWithdrawMoney * (1 + WITHDRAWAL_RATE));
+		// summan av uttagen är uttagen + uttagen * rate dvs uttagen * ( 1 + 0.
+		double amount = amountOfWithdrawMoney * (1 + WITHDRAWAL_RATE);    // uttagen med 2% räntan
 		if((getAccountBalance() - amount) >= 0) {
-			if(costWithdraw) {
-				this.balance -= amount;
-				updateTransactionList(amount);
+			if(!costWithdraw) {
+				this.balance -=amount;
+				updateTransactionList(-amount);
 			} else {
 				this.balance -= amountOfWithdrawMoney;
 				costWithdraw = true;
-				updateTransactionList(amountOfWithdrawMoney);
+				updateTransactionList(-amountOfWithdrawMoney);
 			}
 			returnVal = true;
-			
 			}
 		return returnVal;
 		}

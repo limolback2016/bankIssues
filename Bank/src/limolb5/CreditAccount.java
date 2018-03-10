@@ -3,17 +3,18 @@
  * a credit account for a customer 
  * @author Li Molback, limolb-5
  */
-package src;
+package limolb5;
 
 public class CreditAccount extends Account{
-	
+	private static final float DEBT_RATE = 7f;
+	private static final float RATE = 5f;
 	/**
 	 * class constructor
 	 * @param accountNo is account number
 	 */
 	public CreditAccount(int accountNo){
 		super(accountNo);
-		rate = 0.05f;
+		rate = RATE;
 		accountType = "Kreditkonto";
 	}
 
@@ -31,9 +32,9 @@ public class CreditAccount extends Account{
 		if ((getAccountBalance() - amountOfWithdrawMoney) >= -5000) {
 			this.balance -= amountOfWithdrawMoney;
 			if(getAccountBalance() < 0) {
-				rate = 0.07f;
+				rate = DEBT_RATE;
 			} else {
-				rate = 0.05f;
+				rate = RATE;
 			}
 			updateTransactionList(-amountOfWithdrawMoney);
 			return true;

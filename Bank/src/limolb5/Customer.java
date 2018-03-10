@@ -3,7 +3,7 @@
  * a customer and its account's info. 
  * @author Li Molback, limolb-5
  */
-package src;
+package limolb5;
 
 import java.util.ArrayList;
 import java.util.List;

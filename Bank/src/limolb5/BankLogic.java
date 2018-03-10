@@ -4,16 +4,18 @@
  * bank functionality
  * @author Li Molback, limolb-5
  */
-package src;
+package limolb5;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 public class BankLogic {
 	private static int accoutNummber = 1001;
 	List<Customer> customerList = new ArrayList<Customer>();
-	DecimalFormat d = new DecimalFormat("#.0");
+	DecimalFormat d = new DecimalFormat("#0.0");
 	
 	/**
 	 * Create a new customer in the bank system
@@ -44,12 +46,15 @@ public class BankLogic {
 	 */
 	public List<String> getCustomer(String pNo){
 		List<String> myList = new ArrayList<>();
+		CreditAccount creditAccount = new CreditAccount(accoutNummber);
 		if ( !(findCustomer(pNo) == -1)){
 			Customer customer = customerList.get(findCustomer(pNo));
 			myList.add(customer.getCustomerInfo());
 			for (Account a : customer.getAccounts()){
+				//identify account type to print out right interest here
 				myList.add(a.getAccountNo() + " " + d.format(a.getAccountBalance()) + " " + a.getAccountType() + 
-						" " + d.format(a.getInterest() * 100));
+						" " + String.format("%.1f", a.getInterest()));
+				//problem är att a.getInterest ska vara identiferad från olika konto lika some a.getAccountType
 			}
 			return myList;
 		}

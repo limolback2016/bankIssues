@@ -3,7 +3,7 @@
  * the common variable and method is written in this class
  * @author Li Molback, limolb-5
  */
-package src;
+package limolb5;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -17,7 +17,7 @@ public abstract class Account {
 	private ArrayList<String> transactionList = new ArrayList<String>();
 	protected double rate;
 	protected String accountType = " ";
-	DecimalFormat d = new DecimalFormat("#.0");
+	DecimalFormat d = new DecimalFormat("#0.0");
 	
 	/**
 	 * class constructor
@@ -32,7 +32,7 @@ public abstract class Account {
 	 * @param amountOfDepositeMoney is an amount of
 	 *        depositing money
 	 */
-	public void deposit(double amountOfDepositeMoney){
+	public void deposit(double amountOfDepositeMoney){   // hur sätter man pengar på olika konto????
 		this.balance += amountOfDepositeMoney;
 		updateTransactionList(amountOfDepositeMoney);
 	}
@@ -106,7 +106,7 @@ public abstract class Account {
 	 */
 	public String accountInfo(){
 		DecimalFormat d = new DecimalFormat("#.0");
-		String info = getAccountNo() + " " + d.format(getAccountBalance()) + " " + accountType + " " + d.format(rate * 100);
+		String info = getAccountNo() + " " + d.format(getAccountBalance()) + " " + accountType + " " + d.format(rate);
 		return info;		   
 	}
 	

@@ -1,13 +1,15 @@
+package limolb5;
 /**
  * D0018D, Lab 2: Checks the classes Account, Customer and BankLogic 
  * This class can be updated during the course.
  * Last changes:  2017-01-27
  * @author Susanne Fahlman, susanne.fahlman@ltu.se       
  */
-package src;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import limolb5.BankLogic;
 
 public class ZTestBank2
 {
@@ -428,4 +430,3 @@ public class ZTestBank2
 		bankMenu.test();	
 	}
 }
-
