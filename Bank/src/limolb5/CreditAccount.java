@@ -7,7 +7,9 @@ package limolb5;
 
 public class CreditAccount extends Account{
 	private static final float DEBT_RATE = 7f;
-	private static final float RATE = 5f;
+	private static final float RATE = 0.5f;
+	private static final double CREDIT_LIMIT = -5000;
+
 	/**
 	 * class constructor
 	 * @param accountNo is account number
@@ -29,18 +31,17 @@ public class CreditAccount extends Account{
 	 */
 	@Override
 	public boolean withdraw(double amountOfWithdrawMoney) {
-		if ((getAccountBalance() - amountOfWithdrawMoney) >= -5000) {
+		if ((getAccountBalance() - amountOfWithdrawMoney) >= CREDIT_LIMIT) {
 			this.balance -= amountOfWithdrawMoney;
-			if(getAccountBalance() < 0) {
-				rate = DEBT_RATE;
-			} else {
-				rate = RATE;
-			}
 			updateTransactionList(-amountOfWithdrawMoney);
+			if(this.balance >= 0) {
+				rate = RATE;
+			} else {
+				rate = DEBT_RATE;
+			}
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
@@ -48,8 +49,7 @@ public class CreditAccount extends Account{
 	 * @return interest of balance 
 	 */
 	public double calculateInterest(){
-		double amountWithInterest = getAccountBalance() * rate;
-		return amountWithInterest; 
+		return Math.round((balance * (rate/100)));
 	}
 	
 }

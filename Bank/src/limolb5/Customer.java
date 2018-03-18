@@ -115,7 +115,8 @@ public class Customer {
 	 * @param accountNumber which is checked
 	 */
 	public void closeAccount(int accountNumber) {
-		accountList.remove(findAccount(accountNumber));
+		int accountId = findAccount(accountNumber);
+		accountList.remove(accountId);
 	}
 	
 }

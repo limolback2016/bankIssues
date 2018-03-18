@@ -9,7 +9,7 @@ public class SavingsAccount extends Account{
 	
 	private final float SAVING_RATE = 1f;
 	private final float WITHDRAWAL_RATE = 2f;
-	private boolean costWithdraw = false; 
+	private boolean freeWithdraw = true; 
 	
 	/**
 	 * class constructor
@@ -32,21 +32,22 @@ public class SavingsAccount extends Account{
 	@Override
 	public boolean withdraw(double amountOfWithdrawMoney) {
 		boolean returnVal = false;
-		// summan av uttagen är uttagen + uttagen * rate dvs uttagen * ( 1 + 0.
-		double amount = amountOfWithdrawMoney * (1 + WITHDRAWAL_RATE);    // uttagen med 2% räntan
-		if((getAccountBalance() - amount) >= 0) {
-			if(!costWithdraw) {
-				this.balance -=amount;
-				updateTransactionList(-amount);
-			} else {
-				this.balance -= amountOfWithdrawMoney;
-				costWithdraw = true;
+		// summan av uttagen är uttagen + uttagen * rate dvs uttagen * ( 1 + 0.02)
+		// ett fri uttag per år
+		if(getAccountBalance() - (amountOfWithdrawMoney * (1 + (WITHDRAWAL_RATE/100))) >= 0) {
+			if(freeWithdraw) {
+				this.balance -=amountOfWithdrawMoney;
 				updateTransactionList(-amountOfWithdrawMoney);
+				freeWithdraw = false;
+			} else {
+				double amount = (amountOfWithdrawMoney * (1 + (WITHDRAWAL_RATE/100)));
+				this.balance -= amount;
+				updateTransactionList(-amount);
 			}
 			returnVal = true;
 			}
 		return returnVal;
-		}
+	}
 	
 	/**
 	 * calculate interest of balance in an account

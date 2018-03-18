@@ -9,8 +9,7 @@ package limolb5;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+import java.util.Locale;
 
 public class BankLogic {
 	private static int accoutNummber = 1001;
@@ -52,9 +51,8 @@ public class BankLogic {
 			myList.add(customer.getCustomerInfo());
 			for (Account a : customer.getAccounts()){
 				//identify account type to print out right interest here
-				myList.add(a.getAccountNo() + " " + d.format(a.getAccountBalance()) + " " + a.getAccountType() + 
-						" " + String.format("%.1f", a.getInterest()));
-				//problem är att a.getInterest ska vara identiferad från olika konto lika some a.getAccountType
+				myList.add(a.getAccountNo() + " " + String.format(Locale.ROOT, "%.1f", a.getAccountBalance()) + " " + a.getAccountType() + 
+						" " + String.format(Locale.ROOT, "%.1f", a.getInterest()));
 			}
 			return myList;
 		}
@@ -92,7 +90,7 @@ public class BankLogic {
 			Customer c = customerList.get(findCustomer(pNo));
 			removeList.add(c.getCustomerInfo());
 			for(Account s : c.getAccounts()) {
-				removeList.add(s.accountInfo() + " " + d.format(s.getInterest() * s.getAccountBalance()));
+				removeList.add(s.accountInfo() + " " + String.format(Locale.ROOT, "%.1f", (s.getInterest() / 100) * s.getAccountBalance()));
 			}
 			customerList.remove(c);
 		}
@@ -201,16 +199,23 @@ public class BankLogic {
 	 */
 	public String closeAccount(String pNr, int accountId) {
 		int listId = findCustomer(pNr);
-		DecimalFormat dec = new DecimalFormat("#.00");
 		if(listId != -1) {
 			Customer c = customerList.get(listId);
 			int account = c.findAccount(accountId);
 			if(!(account==-1)) {
 				Account savingsAccount = c.getAccount(account);
+				String accountType = savingsAccount.getAccountType();
 				if ( !savingsAccount.equals(null)) {
-					double interest = (savingsAccount.getInterest() * savingsAccount.getAccountBalance());
-					c.closeAccount(accountId);
-					return savingsAccount.accountInfo() + " " + dec.format(interest);
+					double interest = ((savingsAccount.getInterest() /100 ) * savingsAccount.getAccountBalance());
+					if (accountType == "Kreditkonto"){
+						String returnVal = savingsAccount.accountInfo() + " " + String.format(Locale.ROOT, "%.1f", interest);
+						c.closeAccount(accountId);
+						return returnVal;
+					} else {
+						String returnVal = savingsAccount.accountInfo() + " " + String.format(Locale.ROOT, "%.2f", interest);
+						c.closeAccount(accountId);
+						return returnVal;
+					}
 				}
 			}
 		}

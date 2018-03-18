@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public abstract class Account {
 	private int accountNumber;
@@ -17,7 +18,6 @@ public abstract class Account {
 	private ArrayList<String> transactionList = new ArrayList<String>();
 	protected double rate;
 	protected String accountType = " ";
-	DecimalFormat d = new DecimalFormat("#0.0");
 	
 	/**
 	 * class constructor
@@ -79,8 +79,8 @@ public abstract class Account {
 		SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
 		String formattedTime = format.format(myCalendar.getTime());
 		
-		transaction = formattedTime + " " + d.format(amount)
-				      + " " + d.format(balance);
+		transaction = formattedTime + " " + String.format(Locale.ROOT, "%.1f", amount)
+				      + " " + String.format(Locale.ROOT, "%.1f", balance);
 		transactionList.add(transaction);
 	}
 	
@@ -105,8 +105,8 @@ public abstract class Account {
 	 * @return account info
 	 */
 	public String accountInfo(){
-		DecimalFormat d = new DecimalFormat("#.0");
-		String info = getAccountNo() + " " + d.format(getAccountBalance()) + " " + accountType + " " + d.format(rate);
+		String info = getAccountNo() + " " + String.format(Locale.ROOT, "%.1f", getAccountBalance()) 
+				+ " " + accountType + " " + String.format(Locale.ROOT, "%.1f", rate);
 		return info;		   
 	}
 	
