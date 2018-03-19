@@ -12,7 +12,7 @@ public class Customer {
 	private String surName;
 	private String name;
 	private String idNo;
-	List<Account> accountList = new ArrayList<Account>();
+	private List<Account> accountList = new ArrayList<Account>();
 	
 	/**
 	 * class constructor
