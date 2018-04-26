@@ -8,12 +8,30 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 
 public class BankGUI extends JFrame{
 	public JFrame frame = new JFrame();
+	private static final String VIEW_CUSTOMERS = "View Customers";
+	private static final String NEW_CUSTOMER = "New Customer";
+	private static final String DELETE_CUSTOMER = "Delete Customer";
+	private static final String NEW_SAVING_ACCOUNT = "New Saving Account";
+	private static final String NEW_CREDIT_ACCOUNT = "New Credit Account";
+	private static final String VIEW_CUSTOMER = "View Customer";
+	private static final String SHOW_TRANSACTION = "Show Transactions";
+	private static final String CLOSE_ACCOUNT = "Close Account";
+	
+	private JTextField display;
+	
 	
 	public BankGUI() {
 		buildFrame();
+
+	}
+	
+	public static void main(String[] args) {
+		BankGUI bankGUI = new BankGUI();
+		bankGUI.setVisible(true);
 
 	}
 	
@@ -49,14 +67,14 @@ public class BankGUI extends JFrame{
 	}
 	
 	private void buildButton() {
-		JButton showCustomers = new JButton("View Customers");
-		JButton newCustomer = new JButton("New Customer");
-		JButton deleteCustomer = new JButton("Delete Customer");
-		JButton createSavAcc = new JButton("New Saving Account");
-		JButton createCredAcc = new JButton("New Credit Account");
-		JButton viewCustomer = new JButton("View Customer");
-		JButton showTransactions = new JButton("Show Transactions");
-		JButton closeAccount = new JButton("Close Account");
+		JButton showCustomers = new JButton(VIEW_CUSTOMERS);
+		JButton newCustomer = new JButton(NEW_CUSTOMER);
+		JButton deleteCustomer = new JButton(DELETE_CUSTOMER);
+		JButton createSavAcc = new JButton(NEW_SAVING_ACCOUNT);
+		JButton createCredAcc = new JButton(NEW_CREDIT_ACCOUNT);
+		JButton viewCustomer = new JButton(VIEW_CUSTOMER);
+		JButton showTransactions = new JButton(SHOW_TRANSACTION);
+		JButton closeAccount = new JButton(CLOSE_ACCOUNT);
 		
 		newCustomer.setBounds(30, 30, 220, 25);
 		createSavAcc.setBounds(30, 60, 220, 25);
@@ -77,10 +95,36 @@ public class BankGUI extends JFrame{
 		add(closeAccount);
 	}
 
-	public static void main(String[] args) {
-		BankGUI bankGUI = new BankGUI();
-		bankGUI.setVisible(true);
-
+	private class ButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			String buttonText = event.getActionCommand();
+			
+			switch (buttonText) {
+			case VIEW_CUSTOMERS:
+				addToDisplay(buttonText);
+				break;
+			case VIEW_CUSTOMER:
+				
+				break;
+			case NEW_CUSTOMER:
+				break;
+			case NEW_SAVING_ACCOUNT:
+				break;
+			case NEW_CREDIT_ACCOUNT:
+				break;
+			case DELETE_CUSTOMER:
+				break;
+			case SHOW_TRANSACTION:
+				break;
+			case CLOSE_ACCOUNT:
+				break;
+			}
+		}
 	}
+	
+	private void addToDisplay(String buttonText) {
+		display.setText(buttonText);
+	}
+	
 
 }
